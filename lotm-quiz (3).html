@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Which Lord of the Mysteries Character Are You?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c0e14;
+    --panel:#151824;
+    --panel-2:#1b1f2e;
+    --gold:#c8a04b;
+    --gold-dim:#8a713a;
+    --crimson:#7d2439;
+    --crimson-bright:#a53250;
+    --parchment:#e9e1c9;
+    --parchment-dim:#a49c86;
+    --fog:#3a3448;
+    --line: rgba(200,160,75,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(125,36,57,0.25), transparent 60%),
+      radial-gradient(ellipse at 10% 110%, rgba(58,52,72,0.4), transparent 55%),
+      var(--ink);
+    color:var(--parchment);
+    font-family:'EB Garamond', serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(233,225,201,0.15) 0, transparent 100%),
+      radial-gradient(1px 1px at 80% 60%, rgba(233,225,201,0.12) 0, transparent 100%),
+      radial-gradient(1.5px 1.5px at 60% 20%, rgba(233,225,201,0.1) 0, transparent 100%),
+      radial-gradient(1px 1px at 40% 80%, rgba(233,225,201,0.14) 0, transparent 100%);
+    pointer-events:none;
+    opacity:0.6;
+  }
+  .stage{
+    width:100%;
+    max-width:640px;
+    position:relative;
+    z-index:1;
+  }
+  .frame{
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:2px;
+    position:relative;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,0,0,0.3);
+  }
+  .frame::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border:1px solid rgba(200,160,75,0.25);
+    border-radius:2px;
+    pointer-events:none;
+  }
+  .inner{
+    padding:44px 40px 36px;
+    position:relative;
+  }
+  .eyebrow{
+    font-family:'Cinzel', serif;
+    font-size:11px;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--gold);
+    text-align:center;
+    margin:0 0 10px;
+    opacity:0.85;
+  }
+  h1{
+    font-family:'Cinzel', serif;
+    font-weight:600;
+    font-size:clamp(24px, 4.2vw, 32px);
+    text-align:center;
+    margin:0 0 6px;
+    color:var(--parchment);
+    letter-spacing:0.02em;
+    line-height:1.3;
+  }
+  .sub{
+    text-align:center;
+    color:var(--parchment-dim);
+    font-size:17px;
+    font-style:italic;
+    max-width:440px;
+    margin:0 auto 28px;
+    line-height:1.5;
+  }
+  .divider{
+    width:100%;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--line) 50%, transparent);
+    margin:20px 0 28px;
+  }
+  /* landing */
+  .sigil{
+    width:76px; height:76px;
+    margin:0 auto 20px;
+    display:block;
+  }
+  .portrait{
+    width:160px; height:200px;
+    margin:0 auto 20px;
+    display:block;
+  }
+  .portrait-frame{
+    width:200px;
+    aspect-ratio: 3 / 4.5;
+    margin:0 auto 22px;
+    padding:5px;
+    border:1px solid var(--gold);
+    border-radius:4px;
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    box-shadow: 0 20px 50px -15px rgba(0,0,0,0.65);
+  }
+  .portrait-inner{
+    width:100%;
+    height:100%;
+    border:1px solid rgba(200,160,75,0.4);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .portrait-img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position: top center;
+  }
+  .btn{
+    display:block;
+    width:100%;
+    font-family:'Cinzel', serif;
+    font-size:13px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    text-align:center;
+    background:transparent;
+    color:var(--gold);
+    border:1px solid var(--gold-dim);
+    padding:16px 20px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:all 0.25s ease;
+    font-weight:600;
+  }
+  .btn:hover{
+    background:rgba(200,160,75,0.08);
+    border-color:var(--gold);
+    box-shadow:0 0 0 1px var(--gold) inset;
+  }
+  .btn:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+  .btn-primary{
+    background:linear-gradient(180deg, rgba(200,160,75,0.14), rgba(200,160,75,0.04));
+  }
+  /* progress */
+  .progress-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:8px;
+  }
+  .seq-label{
+    font-family:'Cinzel', serif;
+    font-size:11px;
+    letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:var(--parchment-dim);
+  }
+  .seq-number{
+    font-family:'Cinzel', serif;
+    font-size:22px;
+    color:var(--crimson-bright);
+    min-width:28px;
+    text-align:center;
+  }
+  .seq-track{
+    display:flex;
+    gap:6px;
+    justify-content:center;
+    margin-bottom:30px;
+  }
+  .seq-dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--fog);
+    transition:background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .seq-dot.filled{
+    background:var(--gold);
+    box-shadow:0 0 8px rgba(200,160,75,0.6);
+  }
+  /* question */
+  .qtext{
+    font-family:'Cinzel', serif;
+    font-size:19px;
+    font-weight:600;
+    text-align:center;
+    line-height:1.5;
+    margin:0 0 26px;
+    color:var(--parchment);
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .opt{
+    text-align:left;
+    font-family:'EB Garamond', serif;
+    font-size:16.5px;
+    background:rgba(233,225,201,0.02);
+    color:var(--parchment);
+    border:1px solid var(--line);
+    padding:14px 18px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:all 0.2s ease;
+    line-height:1.4;
+  }
+  .opt:hover{
+    background:rgba(200,160,75,0.08);
+    border-color:var(--gold);
+    transform:translateX(3px);
+  }
+  .opt:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:2px;
+  }
+  /* result card */
+  .card-title-eyebrow{
+    font-family:'Cinzel', serif;
+    font-size:11px;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--crimson-bright);
+    text-align:center;
+    margin-bottom:10px;
+  }
+  .result-name{
+    font-family:'Cinzel', serif;
+    font-size:clamp(26px, 5vw, 34px);
+    text-align:center;
+    margin:0 0 4px;
+    color:var(--gold);
+  }
+  .result-epithet{
+    text-align:center;
+    font-style:italic;
+    color:var(--parchment-dim);
+    font-size:17px;
+    margin-bottom:24px;
+  }
+  .result-desc{
+    font-size:17.5px;
+    line-height:1.7;
+    color:var(--parchment);
+    margin-bottom:20px;
+    text-align:left;
+  }
+  .result-quote{
+    border-left:2px solid var(--gold-dim);
+    padding-left:16px;
+    font-style:italic;
+    color:var(--parchment-dim);
+    font-size:16px;
+    line-height:1.6;
+    margin-bottom:30px;
+  }
+  .actions{
+    display:flex;
+    gap:12px;
+  }
+  .actions .btn{flex:1;}
+  .hidden{display:none;}
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important;}
+  }
+  @media (max-width:480px){
+    .inner{padding:32px 22px 28px;}
+    .actions{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="frame">
+    <div class="inner">
+
+      <!-- LANDING -->
+      <section id="screen-landing">
+        <svg class="sigil" viewBox="0 0 100 100" fill="none" stroke="var(--gold)" stroke-width="1.4">
+          <circle cx="50" cy="50" r="34" stroke-opacity="0.9"/>
+          <circle cx="50" cy="50" r="24" stroke-opacity="0.5"/>
+          <path d="M50 16 L54 46 L84 50 L54 54 L50 84 L46 54 L16 50 L46 46 Z" stroke-opacity="0.9"/>
+          <circle cx="50" cy="50" r="4" fill="var(--gold)" stroke="none"/>
+        </svg>
+        <p class="eyebrow">A Divination</p>
+        <h1>Which Character Are You?</h1>
+        <p class="sub">Lord of the Mysteries. Answer honestly: the fog does not lie, even when you do.</p>
+        <button class="btn btn-primary" onclick="startQuiz()">Begin the Reading</button>
+      </section>
+
+      <!-- QUIZ -->
+      <section id="screen-quiz" class="hidden">
+        <div class="progress-row">
+          <span class="seq-label">Sequence</span>
+          <span class="seq-number" id="seqNumber">9</span>
+        </div>
+        <div class="seq-track" id="seqTrack"></div>
+        <p class="qtext" id="qText"></p>
+        <div class="options" id="qOptions"></div>
+      </section>
+
+      <!-- RESULT -->
+      <section id="screen-result" class="hidden">
+        <p class="card-title-eyebrow">The Reading Concludes</p>
+        <div class="portrait-frame">
+          <div class="portrait-inner">
+            <img class="portrait-img" id="resultImg" alt="">
+          </div>
+        </div>
+        <h2 class="result-name" id="resultName"></h2>
+        <p class="result-epithet" id="resultEpithet"></p>
+        <div class="divider"></div>
+        <p class="result-desc" id="resultDesc"></p>
+        <p class="result-quote" id="resultQuote"></p>
+        <div class="actions">
+          <button class="btn" onclick="restart()">Read Again</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Data ----
+const characters = {
+  klein: {
+    name: "Klein Moretti",
+    epithet: "the Fool who counts every card twice",
+    desc: "You survive by staying three steps ahead. Nothing you say is the whole truth, and nothing you do is improvised: every risk is weighed, every identity is a tool, and every friend is, quietly, also a contingency plan. People trust you more than you let on, which is exactly how you planned it.",
+    quote: "\u201CLuck favors the one who never needed it.\u201D",
+    image: "images/klein.jpg",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <polygon points="34,140 86,140 76,98 60,90 44,98" fill="url(#goldGrad)"/>
+      <path d="M44 98 L36 108 L46 112 Z" fill="url(#goldGrad)"/>
+      <path d="M76 98 L84 108 L74 112 Z" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="68" rx="14" ry="16" fill="url(#goldGrad)"/>
+      <rect x="47" y="30" width="26" height="20" rx="3" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="50" rx="27" ry="6" fill="url(#goldGrad)"/>
+      <circle cx="90" cy="118" r="8" fill="url(#goldGrad)"/>
+      <ellipse cx="87" cy="116" rx="2" ry="2.6" fill="#12141c"/>
+      <ellipse cx="93" cy="116" rx="2" ry="2.6" fill="#12141c"/>
+      <line x1="82" y1="126" x2="70" y2="120" stroke="url(#goldGrad)" stroke-width="1.4"/>
+    `
+  },
+  audrey: {
+    name: "Audrey Hall",
+    image: "images/audrey.jpg",
+    epithet: "the light that walks toward the dark, and the verdict that follows after",
+    desc: "By day you run toward the fire, not away from it: someone needs help, and the math can wait. By night that same warmth turns into something colder and sharper, a verdict that doesn't bend and doesn't ask how anyone feels about it. Both halves are exactly you. You just decide which one the moment calls for.",
+    quote: "\u201CIf no one else will go first, then I will. And if no one else will judge it fairly, I will do that too.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <g stroke="url(#goldGrad)" stroke-width="1" opacity="0.6">
+        <line x1="60" y1="38" x2="60" y2="24"/>
+        <line x1="60" y1="38" x2="42" y2="26" transform="rotate(0 60 38)"/>
+        <line x1="60" y1="38" x2="78" y2="26"/>
+        <line x1="60" y1="38" x2="34" y2="40"/>
+        <line x1="60" y1="38" x2="86" y2="40"/>
+      </g>
+      <polygon points="32,140 88,140 76,100 60,92 44,100" fill="url(#goldGrad)"/>
+      <path d="M45 64 Q33 84 39 108 Q49 98 46 70 Z" fill="url(#goldGrad)"/>
+      <path d="M75 64 Q87 84 81 108 Q71 98 74 70 Z" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="64" rx="13" ry="15" fill="url(#goldGrad)"/>
+    `
+  },
+  alger: {
+    name: "Alger Wilson",
+    image: "images/alger.jpg",
+    epithet: "the door that opens for someone else first",
+    desc: "You'd rather be useful than be admired, though you secretly want both. You measure yourself against people you look up to and always find yourself lacking, which is precisely why you keep showing up, keep trying, and keep quietly becoming someone worth looking up to yourself.",
+    quote: "\u201CI just want to be someone people can count on.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <path d="M38 138 L38 76 Q38 52 60 52 Q82 52 82 76 L82 138" fill="none" stroke="url(#goldGrad)" stroke-width="2" opacity="0.55"/>
+      <polygon points="48,140 72,140 68,104 60,98 52,104" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="78" rx="11" ry="13" fill="url(#goldGrad)"/>
+      <circle cx="76" cy="118" r="3.5" fill="url(#goldGrad)"/>
+      <rect x="78" y="118" width="8" height="2.4" fill="url(#goldGrad)"/>
+    `
+  },
+  derrick: {
+    name: "Derrick Berg",
+    image: "images/derrick.jpg",
+    epithet: "the tide that won't stay in the harbor",
+    desc: "Staying still feels like dying a little. You want the horizon, the storm, the thing nobody's tried yet, not because you're running from something, but because a life with no unknowns left in it doesn't sound like a life worth having. You make loyal friends and terrible plans, usually at the same time.",
+    quote: "\u201CI'll figure it out when I get there.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <g stroke="url(#goldGrad)" stroke-width="1.2" fill="none" opacity="0.55">
+        <circle cx="60" cy="60" r="24"/>
+        <line x1="60" y1="36" x2="60" y2="84"/>
+        <line x1="36" y1="60" x2="84" y2="60"/>
+        <line x1="43" y1="43" x2="77" y2="77"/>
+        <line x1="77" y1="43" x2="43" y2="77"/>
+      </g>
+      <polygon points="34,140 86,140 74,98 60,92 46,98" fill="url(#goldGrad)"/>
+      <path d="M44 100 L34 92 L40 106 Z" fill="url(#goldGrad)"/>
+      <path d="M76 100 L86 92 L80 106 Z" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="68" rx="13" ry="15" fill="url(#goldGrad)"/>
+    `
+  },
+  fors: {
+    name: "Fors Wall",
+    image: "images/fors.jpg",
+    epithet: "the watcher counting shadows before the third night",
+    desc: "You'd rather understand a room fully before you ever step into it. Caution isn't fear to you; it's respect for how much can go wrong. You notice everything, say little, and when you finally do act, it's already been thought through six times over. People underestimate you exactly once.",
+    quote: "\u201CI'd rather wait one more night and be certain.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <path d="M60 46 Q40 56 36 92 Q34 120 40 140 L80 140 Q86 120 84 92 Q80 56 60 46 Z" fill="url(#goldGrad)" opacity="0.9"/>
+      <ellipse cx="60" cy="76" rx="8" ry="10" fill="#12141c" opacity="0.55"/>
+      <path d="M82 108 L82 118 L90 128 L90 108 Z" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.7"/>
+      <path d="M82 128 L82 118 L90 108 L90 128 Z" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.7"/>
+    `
+  },
+  cattleya: {
+    name: "Cattleya",
+    image: "images/cattleya.jpg",
+    epithet: "the Hermit who commands the sea alone",
+    desc: "You don't need permission and you don't need company. Respect, to you, is something earned through strength, not asked for through charm. You've built a life where you answer to no one, and anyone who wants to get close first has to prove they're worth the trouble.",
+    quote: "\u201CI sail because no one else gets to decide where I go.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <g stroke="url(#goldGrad)" stroke-width="1" fill="none" opacity="0.5">
+        <path d="M60 30 L64 42 L76 42 L66 50 L70 62 L60 54 L50 62 L54 50 L44 42 L56 42 Z"/>
+      </g>
+      <polygon points="32,140 88,140 76,98 60,90 44,98" fill="url(#goldGrad)"/>
+      <path d="M44 98 L34 104 L42 112 Z" fill="url(#goldGrad)"/>
+      <path d="M76 98 L86 104 L78 112 Z" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="68" rx="13" ry="15" fill="url(#goldGrad)"/>
+      <path d="M46 58 Q60 46 74 58 L74 62 Q60 52 46 62 Z" fill="url(#goldGrad)"/>
+    `
+  },
+  gehrman: {
+    name: "Gehrman Sparrow",
+    image: "images/gehrman.jpg",
+    epithet: "the mask that never slips",
+    desc: "You keep everyone at arm's length, including yourself sometimes. Warmth is a liability you can't always afford, so you've traded it for control: a steady hand, a clear head, and the willingness to do what needs doing without flinching. Somewhere under all that ice, something still cares. It just doesn't show its face often.",
+    quote: "\u201CFeelings are a cost I settle later, if ever.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <polygon points="30,140 90,140 78,96 60,88 42,96" fill="url(#goldGrad)"/>
+      <path d="M42 96 L32 110 L44 114 Z" fill="url(#goldGrad)"/>
+      <path d="M78 96 L88 110 L76 114 Z" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="68" rx="13" ry="15" fill="url(#goldGrad)"/>
+      <rect x="47" y="62" width="26" height="6" rx="2" fill="#12141c" opacity="0.7"/>
+    `
+  },
+  emlyn: {
+    name: "Emlyn White",
+    image: "images/emlyn.jpg",
+    epithet: "the Moon that won't stop wanting more",
+    desc: "You want things fully: power, permanence, the people you've decided are yours. Pride keeps you from admitting how much any of it costs you, and you'd rather be feared for your ambition than pitied for your restraint. Underneath the calculation, though, is someone who loves harder and holds on longer than anyone gives you credit for.",
+    quote: "\u201CI have never once wanted something halfway.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <path d="M60 26 A16 16 0 1 0 60 58 A12 12 0 1 1 60 26 Z" fill="url(#goldGrad)" opacity="0.6"/>
+      <polygon points="30,140 90,140 74,94 60,86 46,94" fill="url(#goldGrad)"/>
+      <path d="M46 94 L60 100 L74 94 L70 140 L50 140 Z" fill="url(#goldGrad)" opacity="0.85"/>
+      <ellipse cx="60" cy="66" rx="13" ry="15" fill="url(#goldGrad)"/>
+    `
+  },
+  leonard: {
+    name: "Leonard Mitchell",
+    image: "images/leonard.jpg",
+    epithet: "the smile that's carrying more than it shows",
+    desc: "You're the easy one to be around, the one who keeps things light even when they shouldn't be. People assume that means nothing runs deep in you, and that's exactly the mistake they make. Underneath the charm is someone who remembers every debt, every loss, and every person who mattered, and who will quietly go to the ends of the earth for them without ever making a show of it.",
+    quote: "\u201CI'm not as careless as I look. I just don't see the point in looking worried.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="34" ry="6" fill="#000" opacity="0.25"/>
+      <polygon points="32,140 88,140 74,96 60,90 46,96" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="66" rx="13" ry="15" fill="url(#goldGrad)"/>
+      <path d="M46 60 Q40 48 50 40 Q58 46 54 58 Z" fill="url(#goldGrad)"/>
+      <path d="M74 60 Q80 48 70 40 Q62 46 66 58 Z" fill="url(#goldGrad)"/>
+      <circle cx="82" cy="112" r="2.4" fill="url(#goldGrad)"/>
+      <line x1="82" y1="112" x2="82" y2="126" stroke="url(#goldGrad)" stroke-width="1.4"/>
+      <line x1="76" y1="122" x2="88" y2="122" stroke="url(#goldGrad)" stroke-width="1.4"/>
+    `
+  },
+  xio: {
+    name: "Xio Derecha",
+    image: "images/xio.jpg",
+    epithet: "Judgment with her fists already up",
+    desc: "You're loud where others are careful, and quick to act where others hesitate, but it's never mindless. Underneath the bluntness is a sharp instinct for danger and a loyalty that doesn't bend: if someone you love is in trouble, the plan can wait. You'll figure out the details after you've already thrown the first punch.",
+    quote: "\u201CAsk forgiveness later. Protect people now.\u201D",
+    bust: `
+      <ellipse cx="60" cy="140" rx="30" ry="6" fill="#000" opacity="0.25"/>
+      <polygon points="38,140 82,140 74,108 60,102 46,108" fill="url(#goldGrad)"/>
+      <circle cx="34" cy="112" r="7" fill="url(#goldGrad)"/>
+      <circle cx="86" cy="112" r="7" fill="url(#goldGrad)"/>
+      <rect x="30" y="98" width="8" height="16" rx="3" fill="url(#goldGrad)"/>
+      <rect x="82" y="98" width="8" height="16" rx="3" fill="url(#goldGrad)"/>
+      <ellipse cx="60" cy="82" rx="12" ry="13" fill="url(#goldGrad)"/>
+    `
+  }
+};
+
+const questions = [
+  {
+    q: "A stranger asks for your help investigating something clearly dangerous. You:",
+    opts: [
+      ["Weigh every risk first, then agree only with a careful plan", "klein"],
+      ["Say yes immediately, since someone might get hurt otherwise", "audrey"],
+      ["Ask what needs doing and get to work without complaint", "alger"],
+      ["Check whether it's actually your responsibility first", "audrey"],
+      ["Ask if it's actually interesting before deciding", "derrick"],
+      ["Quietly gather information before showing your face", "fors"],
+      ["Say you'll think about it, then handle it entirely on your own terms", "cattleya"],
+      ["Agree without emotion, then quietly prepare for the worst", "gehrman"],
+      ["Agree, if there's something worth having in it for you", "emlyn"],
+      ["Say something charming to lighten the mood, then help without making it a big deal", "leonard"],
+      ["Say yes on instinct and worry about a plan once you're already there", "xio"],
+    ]
+  },
+  {
+    q: "Your ideal evening looks like:",
+    opts: [
+      ["Alone with notes, piecing together a mystery", "klein"],
+      ["Out somewhere new, meeting people", "audrey"],
+      ["Helping someone close to you finish a task", "alger"],
+      ["Reviewing rules and routines, making sure things are in order", "audrey"],
+      ["Somewhere you've never set foot before", "derrick"],
+      ["Watching quietly from a safe distance", "fors"],
+      ["Alone on open water, answering to no one", "cattleya"],
+      ["Working a job under a false name, unnoticed", "gehrman"],
+      ["Somewhere refined, where you'll be seen and admired", "emlyn"],
+      ["Trading easy jokes with an old friend who knows the real you", "leonard"],
+      ["Loud, with friends, possibly ending in a bar fight", "xio"],
+    ]
+  },
+  {
+    q: "A friend betrays your trust, for what they believe is a good reason. You:",
+    opts: [
+      ["Forgive it if the outcome was net positive, and recalculate the friendship", "klein"],
+      ["Feel hurt, but try hard to understand their side", "audrey"],
+      ["Feel a confused loyalty, but stand by them anyway", "alger"],
+      ["Judge the act on principle, regardless of their reasons", "audrey"],
+      ["Shrug it off and move on to the next thing", "derrick"],
+      ["Say nothing, but watch them more closely from now on", "fors"],
+      ["Respect it. Everyone answers to their own compass", "cattleya"],
+      ["File it away coldly. Trust was never unconditional", "gehrman"],
+      ["Resent it quietly, and remember it for a long time", "emlyn"],
+      ["Smile like it's nothing, and never quite forget it", "leonard"],
+      ["Get angry immediately, then forgive once they explain", "xio"],
+    ]
+  },
+  {
+    q: "To you, power mostly means:",
+    opts: [
+      ["Leverage: the ability to control how things turn out", "klein"],
+      ["Responsibility: protecting people who can't protect themselves", "audrey"],
+      ["Trust: being someone others can actually rely on", "alger"],
+      ["Duty: upholding what's right no matter the cost", "audrey"],
+      ["Freedom: going wherever you please, whenever you please", "derrick"],
+      ["Safety: having options no one else knows you have", "fors"],
+      ["Autonomy: needing no one's permission", "cattleya"],
+      ["Precision: doing what's necessary without hesitation", "gehrman"],
+      ["Desire: getting what you want, whatever it costs", "emlyn"],
+      ["Charm: making people underestimate exactly how much you notice", "leonard"],
+      ["Muscle: being someone who can back up their word", "xio"],
+    ]
+  },
+  {
+    q: "Under real pressure, your instinct is to:",
+    opts: [
+      ["Calculate two or three backup plans", "klein"],
+      ["Act first and figure out the plan later", "audrey"],
+      ["Push through it with sheer effort", "alger"],
+      ["Follow the correct procedure, precisely", "audrey"],
+      ["Improvise wildly and hope it works", "derrick"],
+      ["Freeze, observe, then move only once you're sure", "fors"],
+      ["Take command instinctively, alone if you have to", "cattleya"],
+      ["Go cold and mechanical, feelings later", "gehrman"],
+      ["Charm or manipulate your way through it", "emlyn"],
+      ["Keep smiling, keep the room calm, and handle it quietly underneath", "leonard"],
+      ["Throw yourself in first, figure out the plan after", "xio"],
+    ]
+  },
+  {
+    q: "People who know you would call you, above all:",
+    opts: [
+      ["Mysterious", "klein"],
+      ["Warm", "audrey"],
+      ["Dependable", "alger"],
+      ["Strict", "audrey"],
+      ["Restless", "derrick"],
+      ["Guarded", "fors"],
+      ["Formidable", "cattleya"],
+      ["Unreadable", "gehrman"],
+      ["Proud", "emlyn"],
+      ["Easygoing", "leonard"],
+      ["Fierce", "xio"],
+    ]
+  },
+  {
+    q: "Your greatest fear, if you're honest, is:",
+    opts: [
+      ["Losing control of a situation you were supposed to manage", "klein"],
+      ["Failing to protect someone who needed you", "audrey"],
+      ["Being a disappointment to people who believed in you", "alger"],
+      ["Injustice going unanswered because no one stopped it", "audrey"],
+      ["Being trapped in one place, forever, with no way out", "derrick"],
+      ["Being seen clearly before you're ready to be", "fors"],
+      ["Needing to depend on someone else", "cattleya"],
+      ["Being known too well by anyone", "gehrman"],
+      ["Losing what you've fought hardest to keep", "emlyn"],
+      ["Losing someone and having to carry it alone", "leonard"],
+      ["Failing the people who trust you", "xio"],
+    ]
+  },
+  {
+    q: "You find a strange door that shouldn't exist. You:",
+    opts: [
+      ["Study it carefully before touching anything", "klein"],
+      ["Open it, since someone might need help on the other side", "audrey"],
+      ["Wait for someone to say it's safe, then go through first anyway", "alger"],
+      ["Report it and wait for proper authorization", "audrey"],
+      ["Walk straight through", "derrick"],
+      ["Watch it for three nights before deciding anything", "fors"],
+      ["Walk through it alone. No need to wait for backup", "cattleya"],
+      ["Assess it as a threat first, a mystery second", "gehrman"],
+      ["Go through if there's something worth having on the other side", "emlyn"],
+      ["Make a joke to steady your nerves, then step through anyway", "leonard"],
+      ["Kick it open and deal with whatever's inside", "xio"],
+    ]
+  }
+];
+
+// ---- State ----
+let current = 0;
+const scores = {klein:0, audrey:0, alger:0, derrick:0, fors:0, cattleya:0, gehrman:0, emlyn:0, leonard:0, xio:0};
+
+function startQuiz(){
+  document.getElementById('screen-landing').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  buildTrack();
+  renderQuestion();
+}
+
+function buildTrack(){
+  const track = document.getElementById('seqTrack');
+  track.innerHTML = '';
+  for(let i=0;i<questions.length;i++){
+    const d = document.createElement('div');
+    d.className = 'seq-dot';
+    d.id = 'dot-'+i;
+    track.appendChild(d);
+  }
+}
+
+function renderQuestion(){
+  const q = questions[current];
+  document.getElementById('seqNumber').textContent = Math.max(0, 9 - current);
+  for(let i=0;i<questions.length;i++){
+    document.getElementById('dot-'+i).classList.toggle('filled', i < current);
+  }
+  document.getElementById('qText').textContent = q.q;
+  const optWrap = document.getElementById('qOptions');
+  optWrap.innerHTML = '';
+  q.opts.forEach(([label, key]) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = label;
+    b.onclick = () => selectOption(key);
+    optWrap.appendChild(b);
+  });
+}
+
+function selectOption(key){
+  scores[key]++;
+  current++;
+  if(current >= questions.length){
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult(){
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+  let winner = 'klein';
+  let best = -1;
+  for(const key in scores){
+    if(scores[key] > best){ best = scores[key]; winner = key; }
+  }
+  const c = characters[winner];
+  document.getElementById('resultName').textContent = c.name;
+  document.getElementById('resultEpithet').textContent = c.epithet;
+  document.getElementById('resultDesc').textContent = c.desc;
+  document.getElementById('resultQuote').textContent = c.quote;
+  const img = document.getElementById('resultImg');
+  img.src = c.image;
+  img.alt = c.name;
+}
+
+function restart(){
+  current = 0;
+  for(const k in scores) scores[k] = 0;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-landing').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
